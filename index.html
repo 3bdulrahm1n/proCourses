@@ -1940,7 +1940,7 @@ function setupStarHoverEffect() {
 }
 
 // ================= ANIMATION FOR ANY ICON WITH GLOW AND NUMBER COLOR =================
-function setupIconHover(iconClass, solidClass, hoverColor = '#6366f1', glowIntensity = '0 0 20px') {
+function setupIconHover(iconClass, solidClass, hoverColor = '#6366f1', glowIntensity = '0 0 5px') {
     console.log(`🔧 تشغيل التأثير على: ${iconClass} → ${solidClass}`);
     
     document.querySelectorAll(`.${iconClass}`).forEach(icon => {
@@ -2015,7 +2015,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupIconHover('bx-user', 'bxs-user', '#8b5cf6', '0 0 15px');        // مستخدم - glow خفيف
     setupIconHover('bx-book-open', 'bxs-book-open', '#8b5cf6', '0 0 20px'); // كتاب مفتوح - glow متوسط
     setupIconHover('bx-book', 'bxs-book', '#8b5cf6', '0 0 25px');        // كتاب مغلق - glow كبير
-    setupIconHover('bx-clock', 'bxs-clock', '#8b5cf6', '0 0 20px');      // ساعة - glow متوسط
+    setupIconHover('bx-time', 'bxs-time', '#8b5cf6', '0 0 20px');      // ساعة - glow متوسط
 });
 // ================= تشخيص المشاكل =================
 // دالة عشان نشوف كل الأيقونات في الصفحة
