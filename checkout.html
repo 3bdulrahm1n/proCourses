@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - ProCourses</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f6f9;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #111;
+            color: #fff;
+        }
+        
+        nav button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .checkout-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .course-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .price-details {
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .payment-section {
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .payment-method-header {
+            padding: 15px;
+            background: #f8f9fa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .payment-method-header:hover {
+            background: #e9ecef;
+        }
+        
+        .payment-method-header.selected {
+            background: #e3f2fd;
+            border-left: 4px solid #007bff;
+        }
+        
+        .payment-details {
+            padding: 20px;
+            background: white;
+            display: none;
+        }
+        
+        .payment-details.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        .bank-account {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: monospace;
+            font-size: 18px;
+            border: 2px dashed #28a745;
+        }
+        
+        .confirm-btn {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .confirm-btn:hover {
+            background: #218838;
+        }
+        
+        .confirm-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .payment-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .payment-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .payment-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .payment-status.pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            display: block;
+        }
+        
+        .copy-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+        
+        .info-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .secure-badge {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .admin-bank-info {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        
+        .admin-bank-info h4 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <strong>ProCourses</strong>
+        <button onclick="goBack()">← Back to Courses</button>
+    </nav>
+
+    <div class="checkout-container">
+        <h2>🛒 Complete Your Purchase</h2>
+        
+        <!-- معلومات الحساب البنكي (من الأدمن) -->
+        <div class="admin-bank-info">
+            <h4>🏦 Bank Account Information</h4>
+            <p>Please send payment to the following account:</p>
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span><strong>Bank:</strong> Banque Misr</span>
+                    <button class="copy-btn" onclick="copyToClipboard('Banque Misr')">Copy</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span><strong>Account Number:</strong> 12345678901234567</span>
+                    <button class="copy-btn" onclick="copyToClipboard('12345678901234567')">Copy</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span><strong>IBAN:</strong> EG380010005000123456789012345</span>
+                    <button class="copy-btn" onclick="copyToClipboard('EG380010005000123456789012345')">Copy</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span><strong>Swift Code:</strong> BMISEGCX</span>
+                    <button class="copy-btn" onclick="copyToClipboard('BMISEGCX')">Copy</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span><strong>Account Holder:</strong> ProCourses LLC</span>
+                    <button class="copy-btn" onclick="copyToClipboard('ProCourses LLC')">Copy</button>
+                </div>
+            </div>
+            <p class="info-text">⚠️ After sending payment, please fill the form below to confirm your transaction.</p>
+        </div>
+        <!-- حقل البريد الإلكتروني للإشعارات -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #007bff;">
+            <h4 style="margin-bottom: 15px; color: #007bff;">📧 Email for Transaction Updates</h4>
+            <div class="form-group">
+                <label style="font-weight: bold;">Email Address <span style="color: red;">*</span></label>
+                <input type="email" id="transactionEmail" placeholder="your-email@example.com" required style="width: 100%; padding: 12px; border: 2px solid #007bff; border-radius: 4px;">
+                <small style="color: #6c757d; display: block; margin-top: 5px;">We'll send payment confirmation and updates to this email</small>
+            </div>
+        </div>
+        <div id="courseSummary" class="course-summary">
+            Loading course details...
+        </div>
+
+        <div class="price-details">
+            <h3>Payment Details</h3>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                <span>Subtotal:</span>
+                <span id="subtotal">$0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0; color: #28a745;">
+                <span>Discount:</span>
+                <span id="discount">- $0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; margin-top: 15px; padding-top: 15px; border-top: 2px solid #dee2e6;">
+                <span>Total:</span>
+                <span id="total">$0</span>
+            </div>
+        </div>
+
+        <!-- طرق الدفع -->
+        <div class="payment-methods">
+            <h3>Select Payment Method</h3>
+            
+            <!-- بطاقة ائتمان -->
+            <div class="payment-section">
+                <div class="payment-method-header" onclick="togglePaymentMethod('card')" id="header-card">
+                    <span>💳 Credit / Debit Card</span>
+                    <span>▼</span>
+                </div>
+                <div class="payment-details" id="details-card">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Expiry Date</label>
+                                <input type="text" id="cardExpiry" placeholder="MM/YY">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" id="cardCvv" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Card Holder Name</label>
+                        <input type="text" id="cardHolder" placeholder="John Doe">
+                    </div>
+                    <button class="confirm-btn" onclick="confirmPayment('card')">✅ Confirm Card Payment</button>
+                </div>
+            </div>
+            
+            <!-- PayPal -->
+            <div class="payment-section">
+                <div class="payment-method-header" onclick="togglePaymentMethod('paypal')" id="header-paypal">
+                    <span>📱 PayPal</span>
+                    <span>▼</span>
+                </div>
+                <div class="payment-details" id="details-paypal">
+                    <div class="form-group">
+                        <label>PayPal Email</label>
+                        <input type="email" id="paypalEmail" placeholder="your-email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Transaction ID (from PayPal)</label>
+                        <input type="text" id="paypalTxId" placeholder="PAY-1234567890">
+                    </div>
+                    <button class="confirm-btn" onclick="confirmPayment('paypal')">✅ Confirm PayPal Payment</button>
+                </div>
+            </div>
+            
+            <!-- Vodafone Cash -->
+            <div class="payment-section">
+                <div class="payment-method-header" onclick="togglePaymentMethod('vodafone')" id="header-vodafone">
+                    <span>📲 Vodafone Cash</span>
+                    <span>▼</span>
+                </div>
+                <div class="payment-details" id="details-vodafone">
+                    <div class="bank-account">
+                        📞 Send to: 01012345678
+                    </div>
+                    <div class="form-group">
+                        <label>Your Phone Number</label>
+                        <input type="text" id="vodafoneNumber" placeholder="01012345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Transaction Reference</label>
+                        <input type="text" id="vodafoneRef" placeholder="Enter the reference number">
+                    </div>
+                    <button class="confirm-btn" onclick="confirmPayment('vodafone')">✅ Confirm Vodafone Cash Payment</button>
+                </div>
+            </div>
+            
+            <!-- تحويل بنكي -->
+            <div class="payment-section">
+                <div class="payment-method-header" onclick="togglePaymentMethod('bank')" id="header-bank">
+                    <span>🏦 Bank Transfer</span>
+                    <span>▼</span>
+                </div>
+                <div class="payment-details" id="details-bank">
+                    <div class="bank-account">
+                        <div>🏦 Banque Misr</div>
+                        <div>12345678901234567</div>
+                        <div>EG380010005000123456789012345</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Account Number</label>
+                        <input type="text" id="bankAccount" placeholder="Your bank account number">
+                    </div>
+                    <div class="form-group">
+                        <label>Transfer Reference</label>
+                        <input type="text" id="bankRef" placeholder="Transfer reference number">
+                    </div>
+                    <div class="form-group">
+                        <label>Transfer Date</label>
+                        <input type="date" id="bankDate">
+                    </div>
+                    <button class="confirm-btn" onclick="confirmPayment('bank')">✅ Confirm Bank Transfer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- حالة الدفع -->
+        <div id="paymentStatus" class="payment-status"></div>
+        
+        <div class="secure-badge">
+            🔒 Secure payment - Your information is encrypted
+        </div>
+    </div>
+
+    <script>
+        let selectedMethod = null;
+        let course = null;
+        let courseId = null;
+
+        // جلب بيانات الكورس من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        courseId = parseInt(urlParams.get('courseId'));
+
+        // التحقق من وجود معاملة معلقة للمستخدم
+        function checkPendingTransaction() {
+            let session = JSON.parse(localStorage.getItem("currentUser"));
+            if (!session) return null;
+            
+            let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+            let pendingTransaction = transactions.find(t => 
+                t.userId === session.username && 
+                t.courseId === courseId && 
+                t.status === 'pending'
+            );
+            
+            return pendingTransaction;
+        }
+
+        // في بداية الصفحة، بعد ما تجيب courseId
+        window.addEventListener('load', function() {
+            let pending = checkPendingTransaction();
+            if (pending) {
+                showPaymentStatus('pending', `
+                    <div style="text-align: right;">
+                        <h4 style="color: #856404;">⏳ لديك معاملة معلقة لهذا الكورس</h4>
+                        <p>رقم المعاملة: ${pending.id}</p>
+                        <p>تاريخ المعاملة: ${new Date(pending.date).toLocaleString()}</p>
+                        <p>في انتظار تأكيد الدفع من الإدارة</p>
+                        <button onclick="window.location.href='index.html#courses'" 
+                                style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                            العودة للكورسات
+                        </button>
+                    </div>
+                `);
+                
+                // إخفاء باقي الصفحة
+                document.querySelector('.payment-methods').style.display = 'none';
+                document.querySelector('.admin-bank-info').style.display = 'none';
+            }
+        });
+
+        // عرض ملخص الكورس
+        function loadCourseSummary() {
+            const courses = JSON.parse(localStorage.getItem("courses")) || [];
+            course = courses.find(c => c.id === courseId);
+            
+            if (!course) {
+                alert("Course not found!");
+                window.location.href = "index.html#courses";
+                return;
+            }
+
+            const finalPrice = course.price - (course.price * course.discount / 100);
+            
+            document.getElementById('courseSummary').innerHTML = `
+                <h3>${course.title}</h3>
+                <p>${course.desc}</p>
+                <div style="display: flex; align-items: center; gap: 20px; margin-top: 15px;">
+                    <img src="${course.img || 'https://via.placeholder.com/100'}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <div style="font-size: 24px; color: #28a745;">${finalPrice.toFixed(2)} ${course.currency}</div>
+                        ${course.discount > 0 ? `<div style="color: #6c757d;"><del>${course.price} ${course.currency}</del> (${course.discount}% off)</div>` : ''}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('subtotal').textContent = `${course.price} ${course.currency}`;
+            document.getElementById('discount').textContent = `- ${(course.price * course.discount / 100).toFixed(2)} ${course.currency}`;
+            document.getElementById('total').textContent = `${finalPrice.toFixed(2)} ${course.currency}`;
+        }
+
+        // فتح/غلق تفاصيل طريقة الدفع
+        function togglePaymentMethod(method) {
+            const details = document.getElementById(`details-${method}`);
+            const header = document.getElementById(`header-${method}`);
+            
+            // قفل كل التفاصيل التانية
+            document.querySelectorAll('.payment-details').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.payment-method-header').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // فتح التفاصيل المختارة
+            details.classList.add('active');
+            header.classList.add('selected');
+            selectedMethod = method;
+        }
+
+        // تأكيد الدفع
+        function confirmPayment(method) {
+            if (!validatePaymentDetails(method)) {
+                return;
+            }
+            
+            const finalPrice = course.price - (course.price * course.discount / 100);
+            
+            // عرض حالة الدفع
+            showPaymentStatus('pending', '⏳ Processing your payment...');
+            
+            // محاكاة إرسال البيانات للأدمن
+            setTimeout(() => {
+                // هنا بنحاكي إرسال بيانات الدفع للأدمن
+                sendPaymentToAdmin(method);
+            }, 2000);
+        }
+
+        // التحقق من صحة البيانات
+        function validatePaymentDetails(method) {
+            switch(method) {
+                case 'card':
+                    let cardNum = document.getElementById('cardNumber').value;
+                    let cardExp = document.getElementById('cardExpiry').value;
+                    let cardCvv = document.getElementById('cardCvv').value;
+                    let cardHolder = document.getElementById('cardHolder').value;
+                    
+                    if (!cardNum || !cardExp || !cardCvv || !cardHolder) {
+                        alert('❌ Please fill all card details');
+                        return false;
+                    }
+                    break;
+                    
+                case 'paypal':
+                    let email = document.getElementById('paypalEmail').value;
+                    let txId = document.getElementById('paypalTxId').value;
+                    
+                    if (!email || !txId) {
+                        alert('❌ Please fill all PayPal details');
+                        return false;
+                    }
+                    break;
+                    
+                case 'vodafone':
+                    let phone = document.getElementById('vodafoneNumber').value;
+                    let ref = document.getElementById('vodafoneRef').value;
+                    
+                    if (!phone || !ref) {
+                        alert('❌ Please fill all Vodafone Cash details');
+                        return false;
+                    }
+                    break;
+                    
+                case 'bank':
+                    let account = document.getElementById('bankAccount').value;
+                    let bankRef = document.getElementById('bankRef').value;
+                    let date = document.getElementById('bankDate').value;
+                    
+                    if (!account || !bankRef || !date) {
+                        alert('❌ Please fill all bank transfer details');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        // إرسال بيانات الدفع للأدمن (محاكاة)
+        function sendPaymentToAdmin(method) {
+            // جمع بيانات الدفع
+            let paymentDetails = {
+                method: method,
+                courseId: courseId,
+                courseTitle: course.title,
+                amount: course.price - (course.price * course.discount / 100),
+                currency: course.currency,
+                user: JSON.parse(localStorage.getItem("currentUser"))?.username,
+                date: new Date().toISOString(),
+                details: getPaymentDetails(method)
+            };
+            
+            console.log("📧 Payment notification sent to admin:", paymentDetails);
+            
+            // هنا في التطبيق الحقيقي، هنبعت إيميل للأدمن
+            // لكن دلوقتي هنخزن في localStorage
+            let payments = JSON.parse(localStorage.getItem("payments")) || [];
+            payments.push(paymentDetails);
+            localStorage.setItem("payments", JSON.stringify(payments));
+            
+            // إكمال عملية الشراء
+            completePurchase();
+        }
+
+        // جلب تفاصيل الدفع حسب الطريقة
+        function getPaymentDetails(method) {
+            switch(method) {
+                case 'card':
+                    return {
+                        cardNumber: document.getElementById('cardNumber').value,
+                        cardHolder: document.getElementById('cardHolder').value
+                    };
+                case 'paypal':
+                    return {
+                        email: document.getElementById('paypalEmail').value,
+                        transactionId: document.getElementById('paypalTxId').value
+                    };
+                case 'vodafone':
+                    return {
+                        phone: document.getElementById('vodafoneNumber').value,
+                        reference: document.getElementById('vodafoneRef').value
+                    };
+                case 'bank':
+                    return {
+                        account: document.getElementById('bankAccount').value,
+                        reference: document.getElementById('bankRef').value,
+                        date: document.getElementById('bankDate').value
+                    };
+            }
+        }
+
+        // عرض حالة الدفع
+        function showPaymentStatus(type, message) {
+            let statusDiv = document.getElementById('paymentStatus');
+            statusDiv.className = `payment-status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        // إتمام الشراء
+        // إتمام الشراء (تخزين المعاملة وانتظار الموافقة)
+// في بداية دالة completePurchase
+function completePurchase() {
+    // جلب بيانات المستخدم الحالي
+    let session = JSON.parse(localStorage.getItem("currentUser"));
+    if (!session) {
+        alert("Please login first");
+        window.location.href = "index.html";
+        return;
+    }
+
+    // التحقق من البريد الإلكتروني
+    let transactionEmail = document.getElementById('transactionEmail').value.trim();
+    if (!transactionEmail) {
+        alert('❌ Please enter your email address');
+        return;
+    }
+    
+    // التحقق من صحة الإيميل
+    if (!transactionEmail.includes('@') || !transactionEmail.includes('.')) {
+        alert('❌ Please enter a valid email address');
+        return;
+    }
+
+    // جلب بيانات الكورس
+    let courses = JSON.parse(localStorage.getItem("courses")) || [];
+    let course = courses.find(c => c.id === courseId);
+    
+    if (!course) {
+        alert("Course not found");
+        return;
+    }
+
+    // التحقق من البيانات المطلوبة حسب طريقة الدفع
+    if (!validatePaymentDetails(selectedMethod)) {
+        return;
+    }
+
+    const finalPrice = course.price - (course.price * course.discount / 100);
+
+    // إنشاء كود المعاملة الفريد
+    let transactionId = 'TXN' + Date.now() + Math.floor(Math.random() * 1000);
+
+    // جمع بيانات المعاملة مع الإيميل
+    let transaction = {
+        id: transactionId,
+        userId: session.username,
+        userEmail: transactionEmail, // الإيميل من حقل المعاملة
+        courseId: courseId,
+        courseTitle: course.title,
+        amount: finalPrice,
+        currency: course.currency,
+        method: selectedMethod,
+        status: 'pending',
+        date: new Date().toISOString(),
+        paymentDetails: getPaymentDetails(selectedMethod),
+        bankAccount: {
+            bank: 'Banque Misr',
+            accountNumber: '12345678901234567',
+            iban: 'EG380010005000123456789012345',
+            holder: 'ProCourses LLC'
+        }
+    };
+
+    // تخزين المعاملة
+    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    transactions.push(transaction);
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
+    // عرض رسالة النجاح مع الإيميل
+    showPaymentStatus('pending', `
+        <div style="text-align: right;">
+            <h4 style="color: #856404; margin-bottom: 15px;">✅ تم استلام طلب الدفع!</h4>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <p style="margin: 5px 0;"><strong>📧 سيتم الإرسال إلى:</strong> ${transactionEmail}</p>
+                <p style="margin: 5px 0;"><strong>رقم المعاملة:</strong> ${transactionId}</p>
+                <p style="margin: 5px 0;"><strong>المبلغ:</strong> ${finalPrice.toFixed(2)} ${course.currency}</p>
+                <p style="margin: 5px 0;"><strong>طريقة الدفع:</strong> ${selectedMethod}</p>
+            </div>
+            
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h5 style="margin-bottom: 10px;">🏦 بيانات الحساب المستلم:</h5>
+                <p style="margin: 5px 0; font-family: monospace;">البنك: Banque Misr</p>
+                <p style="margin: 5px 0; font-family: monospace;">رقم الحساب: 12345678901234567</p>
+                <p style="margin: 5px 0; font-family: monospace;">IBAN: EG380010005000123456789012345</p>
+                <p style="margin: 5px 0; font-family: monospace;">المستفيد: ProCourses LLC</p>
+            </div>
+            
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <p style="margin: 5px 0; color: #856404;">
+                    ⏳ في انتظار تأكيد الدفع من الإدارة.<br>
+                    سيتم إرسال إيميل تأكيد إلى <strong>${transactionEmail}</strong> فور الموافقة.
+                </p>
+            </div>
+            
+            <button onclick="window.location.href='index.html#courses'" 
+                    style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                العودة للكورسات
+            </button>
+        </div>
+    `);
+}
+// دالة التحقق من البيانات (شغالة زي ما هي)
+function validatePaymentDetails(method) {
+    switch(method) {
+        case 'card':
+            let cardNum = document.getElementById('cardNumber').value;
+            let cardExp = document.getElementById('cardExpiry').value;
+            let cardCvv = document.getElementById('cardCvv').value;
+            let cardHolder = document.getElementById('cardHolder').value;
+            
+            if (!cardNum || !cardExp || !cardCvv || !cardHolder) {
+                alert('❌ Please fill all card details');
+                return false;
+            }
+            
+            // تحقق بسيط من رقم البطاقة
+            if (cardNum.replace(/\s/g, '').length < 16) {
+                alert('❌ Invalid card number');
+                return false;
+            }
+            break;
+            
+        case 'paypal':
+            let email = document.getElementById('paypalEmail').value;
+            let txId = document.getElementById('paypalTxId').value;
+            
+            if (!email || !txId) {
+                alert('❌ Please fill all PayPal details');
+                return false;
+            }
+            
+            if (!email.includes('@')) {
+                alert('❌ Invalid email');
+                return false;
+            }
+            break;
+            
+        case 'vodafone':
+            let phone = document.getElementById('vodafoneNumber').value;
+            let ref = document.getElementById('vodafoneRef').value;
+            
+            if (!phone || !ref) {
+                alert('❌ Please fill all Vodafone Cash details');
+                return false;
+            }
+            
+            if (phone.length < 11) {
+                alert('❌ Invalid phone number');
+                return false;
+            }
+            break;
+            
+        case 'bank':
+            let account = document.getElementById('bankAccount').value;
+            let bankRef = document.getElementById('bankRef').value;
+            let date = document.getElementById('bankDate').value;
+            
+            if (!account || !bankRef || !date) {
+                alert('❌ Please fill all bank transfer details');
+                return false;
+            }
+            break;
+    }
+    return true;
+}
+
+// تحديث المستخدمين القدام بإضافة إيميل افتراضي
+function fixOldUsers() {
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let updated = false;
+    
+    users = users.map(u => {
+        if (!u.email) {
+            u.email = `${u.username}@example.com`;
+            updated = true;
+        }
+        return u;
+    });
+    
+    if (updated) {
+        localStorage.setItem("users", JSON.stringify(users));
+        console.log("✅ Old users updated with default emails");
+    } else {
+        console.log("All users already have emails");
+    }
+}
+
+// استخدم الدالة
+fixOldUsers();
+
+
+
+        // نسخ النص للحافظة
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied to clipboard');
+            }).catch(() => {
+                alert('❌ Could not copy');
+            });
+        }
+
+        // زر العودة
+        function goBack() {
+            window.location.href = "index.html#courses";
+        }
+
+        // تحميل البيانات عند فتح الصفحة
+        loadCourseSummary();
+    </script>
+</body>
+</html>
