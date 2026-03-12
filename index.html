@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProCourses · منصة تعليم عصرية</title>
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <title>ProCourses - منصة تعليمية</title>
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init({
+                publicKey: "DHuApjuLBLDdWDMb2"
+            });
+        })();
+    </script>
+    <!-- باقي الروابط (CSS, Fonts, Icons) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
     <style>
         /* تحسينات إضافية مباشرة لضمان التناسق */
@@ -222,12 +230,9 @@
         <a href="#home"><i class='bx bx-home'></i> Home</a>
         <a href="#about"><i class='bx bx-info-circle'></i> About</a>
         <a href="#courses"><i class='bx bx-book-open'></i> Courses</a>
-        
-        <!-- رابط Users Panel (للأدمن) -->
         <a href="#users" id="usersLink" style="display: none;" onclick="showUsersPanel(); return false;"><i class='bx bxs-user-detail'></i> Users</a>
-        
-        <!-- رابط المعاملات (للأدمن) -->
         <a href="admin-panel.html" id="transactionsLink" style="display: none;"><i class='bx bxs-credit-card'></i> Transactions</a>
+        <a href="#contact"><i class='bx bx-envelope'></i> Contact</a>
     </div>
     <div id="navAuth"></div>
 </nav>
@@ -372,7 +377,116 @@
     </div>
     <div class="course-grid" id="courseList"></div>
 </section>
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="section contact-section">
+    <div class="contact-container">
+        <div class="contact-header">
+            <span class="contact-badge"><i class='bx bx-message'></i> تواصل معنا</span>
+            <h2>نحن هنا <span class="gradient-text">لخدمتك</span></h2>
+            <p>تواصل معنا لأي استفسار أو مساعدة، فريقنا جاهز للرد على جميع أسئلتك</p>
+        </div>
 
+        <div class="contact-wrapper">
+            <!-- معلومات الاتصال -->
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class='bx bx-map'></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>العنوان</h3>
+                        <p>القاهرة، مصر</p>
+                        <p>شارع التعلم الرقمي، مبنى 123</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class='bx bx-phone'></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>رقم الهاتف</h3>
+                        <p>+20 123 456 7890</p>
+                        <p>+20 098 765 4321</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class='bx bx-envelope'></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>البريد الإلكتروني</h3>
+                        <p>info@pro-courses.com</p>
+                        <p>support@pro-courses.com</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="bx bx-alarm"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>ساعات العمل</h3>
+                        <p>السبت - الخميس: 9ص - 9م</p>
+                        <p>الجمعة: مغلق</p>
+                    </div>
+                </div>
+
+                <!-- وسائل التواصل الاجتماعي -->
+                <div class="social-links">
+                    <h3>تابعنا على</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="social-icon"><i class='bx bxl-twitter'></i></a>
+                        <a href="#" class="social-icon"><i class='bx bxl-linkedin'></i></a>
+                        <a href="#" class="social-icon"><i class='bx bxl-youtube'></i></a>
+                        <a href="#" class="social-icon"><i class='bx bxl-instagram'></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج الاتصال -->
+            <div class="contact-form">
+                <h3><i class='bx bx-send'></i> أرسل لنا رسالة</h3>
+                
+                <form id="contactForm" onsubmit="sendEmail(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name"><i class='bx bx-user'></i> الاسم</label>
+                            <input type="text" id="name" name="name" placeholder="اسمك الكامل" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class='bx bx-envelope'></i> البريد الإلكتروني</label>
+                            <input type="email" id="email" name="email" placeholder="بريدك الإلكتروني" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject"><i class='bx bx-tag'></i> الموضوع</label>
+                        <input type="text" id="subject" name="subject" placeholder="موضوع الرسالة" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message"><i class='bx bx-message'></i> الرسالة</label>
+                        <textarea id="message" name="message" rows="5" placeholder="اكتب رسالتك هنا..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class='bx bx-send'></i> إرسال الرسالة
+                    </button>
+                </form>
+
+                <!-- رسالة النجاح -->
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <i class='bx bx-check-circle'></i>
+                    <h4>تم إرسال رسالتك بنجاح!</h4>
+                    <p>سنتواصل معك في أقرب وقت ممكن</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- ================= USERS MANAGEMENT PANEL ================= -->
 <div class="modal" id="usersModal" style="display: none;">
     <div class="modal-content">
@@ -403,6 +517,87 @@
         </p>
     </div>
 </div>
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="footer-container">
+        <!-- القسم العلوي للـ Footer -->
+        <div class="footer-top">
+            <!-- معلومات المنصة -->
+            <div class="footer-col">
+                <h3 class="footer-logo">
+                    <i class='bx bxs-graduation'></i> ProCourses
+                </h3>
+                <p class="footer-desc">
+                    منصة تعليمية عربية تهدف لنشر المعرفة وتطوير المهارات في مختلف المجالات التقنية والإبداعية.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-twitter'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-linkedin'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-youtube'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-instagram'></i></a>
+                </div>
+            </div>
+
+            <!-- روابط سريعة -->
+            <div class="footer-col">
+                <h4 class="footer-title">روابط سريعة</h4>
+                <ul class="footer-links">
+                    <li><a href="#home"><i class='bx bx-chevron-left'></i> الرئيسية</a></li>
+                    <li><a href="#about"><i class='bx bx-chevron-left'></i> من نحن</a></li>
+                    <li><a href="#courses"><i class='bx bx-chevron-left'></i> الكورسات</a></li>
+                    <li><a href="#contact"><i class='bx bx-chevron-left'></i> تواصل معنا</a></li>
+                </ul>
+            </div>
+
+            <!-- الكورسات -->
+            <div class="footer-col">
+                <h4 class="footer-title">الكورسات</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class='bx bx-chevron-left'></i> تطوير الويب</a></li>
+                    <li><a href="#"><i class='bx bx-chevron-left'></i> تصميم جرافيك</a></li>
+                    <li><a href="#"><i class='bx bx-chevron-left'></i> تسويق إلكتروني</a></li>
+                    <li><a href="#"><i class='bx bx-chevron-left'></i> لغات برمجة</a></li>
+                </ul>
+            </div>
+
+            <!-- معلومات الاتصال -->
+            <div class="footer-col">
+                <h4 class="footer-title">تواصل معنا</h4>
+                <ul class="footer-contact">
+                    <li>
+                        <i class='bx bx-map'></i>
+                        <span>القاهرة، مصر</span>
+                    </li>
+                    <li>
+                        <i class='bx bx-phone'></i>
+                        <span>+20 123 456 7890</span>
+                    </li>
+                    <li>
+                        <i class='bx bx-envelope'></i>
+                        <span>info@pro-courses.com</span>
+                    </li>
+                    <li>
+                        <i class="bx bx-alarm"></i>
+                        <span>السبت - الخميس: 9ص - 9م</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- القسم السفلي للـ Footer -->
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>© 2026 ProCourses. جميع الحقوق محفوظة</p>
+            </div>
+            <div class="footer-bottom-links">
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">شروط الاستخدام</a>
+                <a href="#">اتفاقية المستخدم</a>
+            </div>
+        </div>
+    </div>
+</footer>
 <script>
 
 /* ================= DATA ================= */
@@ -2013,7 +2208,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupIconHover('bx-heart', 'bxs-heart', '#8b5cf6', '0 0 20px');      // قلب - glow متوسط
     setupIconHover('bx-bell', 'bxs-bell', '#8b5cf6', '0 0 20px');        // جرس - glow متوسط
     setupIconHover('bx-user', 'bxs-user', '#8b5cf6', '0 0 15px');        // مستخدم - glow خفيف
-    setupIconHover('bx-book-open', 'bxs-book-open', '#8b5cf6', '0 0 20px'); // كتاب مفتوح - glow متوسط
     setupIconHover('bx-book', 'bxs-book', '#8b5cf6', '0 0 25px');        // كتاب مغلق - glow كبير
     setupIconHover('bx-time', 'bxs-time', '#8b5cf6', '0 0 20px');      // ساعة - glow متوسط
 });
@@ -2031,10 +2225,77 @@ setTimeout(checkIcons, 1000);
 // شغل الدالة بعد تحميل الصفحة
 document.addEventListener('DOMContentLoaded', setupStarHoverEffect);
 
+
 /* ================= INIT ================= */
 updateNav();
 displayCourses();
 </script>
 <script src="db.js"></script>
+<script type="text/javascript">
+  // تهيئة EmailJS - مرة واحدة فقط
+  (function() {
+    emailjs.init("DHuApjuLBLDdWDMb2");
+  })();
+
+  // دالة إرسال الإيميل
+  function sendEmail(event) {
+    event.preventDefault();
+    
+    // جلب البيانات من النموذج
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    // التحقق من الحقول
+    if (!name || !email || !subject || !message) {
+      alert('❌ الرجاء ملء جميع الحقول');
+      return;
+    }
+    
+    // ✅ أسماء الحقول مطابقة للصورة
+    const templateParams = {
+      name: name,           // {{name}}
+      email: email,         // {{email}}
+      subject: subject,     // {{subject}}
+      message: message,     // {{message}}
+      reply_to: email       // {{reply_to}} - نفس الإيميل للرد
+    };
+    
+    // تغيير حالة الزر
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> جاري الإرسال...';
+    submitBtn.disabled = true;
+    
+    // إرسال الإيميل
+    emailjs.send('service_97532as', 'template_vv74bsm', templateParams)
+      .then(function(response) {
+        console.log('✅ نجاح الإرسال:', response);
+        
+        // إخفاء النموذج وإظهار رسالة النجاح
+        document.querySelector('.contact-form form').style.display = 'none';
+        document.querySelector('.success-message').style.display = 'block';
+        
+        // تفريغ الحقول
+        document.querySelector('.contact-form form').reset();
+        
+        // إعادة النموذج بعد 3 ثواني
+        setTimeout(() => {
+          document.querySelector('.contact-form form').style.display = 'block';
+          document.querySelector('.success-message').style.display = 'none';
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.error('❌ فشل الإرسال:', error);
+        alert('❌ فشل إرسال الرسالة. الرجاء المحاولة مرة أخرى');
+      })
+      .finally(function() {
+        // إعادة الزر لحالته الطبيعية
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      });
+  }
+</script>
 </body>
 </html>
